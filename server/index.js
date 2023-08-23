@@ -17,7 +17,7 @@ app.listen(4000, () => {
 const axios = require('axios');
 
 
-mongoose.connect('mongodb+srv://sathya:S1fvCY7ijgDltSxb@cluster0.1jm3pit.mongodb.net/?retryWrites=true&w=majority');
+mongoose.connect(process.env.MONGO_URL);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {

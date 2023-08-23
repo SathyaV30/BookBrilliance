@@ -84,7 +84,7 @@ export default function Main({ navigation }) {
               <Text style={styles.buttonText}>Register</Text>
             </LinearGradient>
           </TouchableOpacity>
-
+{/* 
           <View style={styles.separator}>
             <View style={styles.line} />
             <Text style={styles.separatorText}>Or</Text>
@@ -98,12 +98,13 @@ export default function Main({ navigation }) {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => { /* Apple Auth Logic Here */ }}>
+          <TouchableOpacity onPress={{}}>
             <View style={[styles.buttons, styles.appleButton]}>
               <Icon name="apple" size={25} color="#FFF9E9" style={{ marginRight: 10 }} />
               <Text style={styles.buttonText}>Continue with Apple</Text>
             </View>
           </TouchableOpacity>
+           */}
         </View>
       </View>
     </View>
