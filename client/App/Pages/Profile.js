@@ -4,6 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { AuthContext } from '../../AuthContext';
 import axios from 'axios';
 import { LinearGradient } from 'expo-linear-gradient';
+import { backendUrl } from '../../config';
 
 
 function UserProfile() {
@@ -18,7 +19,7 @@ function UserProfile() {
 
     const handleSave = async () => {
         try {
-            const response = await axios.post('http://192.168.0.130:4000/saveUserDetails', {
+            const response = await axios.post(`${backendUrl}/saveUserDetails`, {
                 name,
                 username,
                 email,
@@ -43,7 +44,7 @@ function UserProfile() {
 
     const fetchUserDetails = async () => {
         try {
-            const response = await axios.get('http://192.168.0.130:4000/userDetails', {
+            const response = await axios.get(`${backendUrl}/userDetails`, {
                 headers: {
                     'Authorization': `Bearer ${userToken}`
                 }

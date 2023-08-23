@@ -6,7 +6,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { globalStyles } from './GlobalStyles';
 import axios from 'axios';
 import { AuthContext } from '../../AuthContext';
-
+import { backendUrl } from '../../config';
 
 export default function Register({ navigation }) {
   const [username, setUsername] = useState('');
@@ -23,7 +23,7 @@ export default function Register({ navigation }) {
     }
 
     try {
-      const response = await axios.post('http://192.168.0.130:4000/register', {
+      const response = await axios.post(`${backendUrl}/register`, {
         username,
         password,
         email,
@@ -32,15 +32,15 @@ export default function Register({ navigation }) {
       const { data } = response;
       
       if (data.message === "User registered and logged in successfully") {
-        // Registration was successful
+       
         const { token } = data;
         login(token);
 
-        // Navigate to the dashboard
+       
         navigation.navigate('Dashboard');
 
       } else {
-        // Handle the error based on your backend response structure
+        
         alert('Registration failed! Please try again.');
       }
       

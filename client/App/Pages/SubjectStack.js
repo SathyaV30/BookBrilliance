@@ -8,6 +8,7 @@ import {  renderExactStars } from './Dashboard';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AuthContext } from '../../AuthContext';
 import { FontAwesome } from '@expo/vector-icons';
+import { backendUrl } from '../../config';
 const scaleWidth = (size) => (width / 414) * size;  
 const scaleHeight = (size) => (height / 896) * size;  
 
@@ -39,7 +40,7 @@ export default function SubjectStack({ route }) {
 
     const fetchUserLibrary = async () => {
       try {
-          const response = await axios.get('http://192.168.0.130:4000/myLibrary', {
+          const response = await axios.get(`${backendUrl}/myLibrary`, {
               headers: {
                   'Authorization': `Bearer ${userToken}`
               }
@@ -77,7 +78,7 @@ const handleRemoveFromLibrary = async (book) => {
   try {
     const response = await axios({
         method: 'delete',  
-        url: 'http://192.168.0.130:4000/removeFromLibrary',
+        url: `${backendUrl}/removeFromLibrary`,
         data: { book: filteredBook },  
         headers: {
             'Content-Type': 'application/json',
@@ -158,7 +159,7 @@ const isBookInLibrary = (book) => {
 };
 
     try {
-     const response =  await axios.post('http://192.168.0.130:4000/addBook', 
+     const response =  await axios.post(`${backendUrl}/addBook`, 
             { book: filteredBook },
             {
                 headers: {

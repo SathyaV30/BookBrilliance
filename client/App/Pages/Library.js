@@ -6,6 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import BookModal from './BookModal';
 import { renderExactStars } from './Dashboard';
 import { LinearGradient } from 'expo-linear-gradient';
+import { backendUrl } from '../../config';
 
 export default function Library() {
     const [books, setBooks] = useState([]);
@@ -17,7 +18,7 @@ export default function Library() {
     useEffect(() => {
         const fetchBooks = async () => {
             try {
-                const response = await axios.get('http://192.168.0.130:4000/myLibrary', {
+                const response = await axios.get(`${backendUrl}/myLibrary`, {
                     headers: {
                         'Authorization': `Bearer ${userToken}`
                     },
@@ -59,7 +60,7 @@ export default function Library() {
             pages: selectedBook.pages
         }
         try {
-            const response = await axios.post('http://192.168.0.130:4000/addBook', 
+            const response = await axios.post(`${backendUrl}/addBook`, 
                 { book: filteredBook },
                 {
                     headers: {
@@ -100,7 +101,7 @@ export default function Library() {
     try {
         const response = await axios({
             method: 'delete', 
-            url: 'http://192.168.0.130:4000/removeFromLibrary',
+            url: `${backendUrl}/removeFromLibrary`,
             data: { book: filteredBook }, 
             headers: {
                 'Content-Type': 'application/json',

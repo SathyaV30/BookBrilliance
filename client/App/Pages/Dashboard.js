@@ -10,6 +10,7 @@ import { globalStyles } from './GlobalStyles';
 import { subjects } from './subjects';
 import BookModal from './BookModal';
 import Toast from 'react-native-toast-message';
+import { backendUrl } from '../../config';
 import {
     Fiction,
     NonFiction,
@@ -102,7 +103,7 @@ export default function Dashboard({ navigation }) {
 
      const fetchUserLibrary = async () => {
         try {
-            const response = await axios.get('http://192.168.0.130:4000/myLibrary', {
+            const response = await axios.get(`${backendUrl}/myLibrary`, {
                 headers: {
                     'Authorization': `Bearer ${userToken}`
                 }
@@ -126,10 +127,9 @@ export default function Dashboard({ navigation }) {
     
     const renderFooter = () => {
         const footerContainer = {
-            flexDirection: 'column',        // Children will be aligned in a row
-            justifyContent: 'center',    // Center children horizontally       
-            // Center children vertically
-            padding: 10,                 // Adds some space around the content
+            flexDirection: 'column',      
+            justifyContent: 'center',   
+            padding: 10,               
         };
         
         return (
@@ -170,7 +170,7 @@ export default function Dashboard({ navigation }) {
             pages: selectedBook.pages,
         }
         try {
-            const response = await axios.post('http://192.168.0.130:4000/addBook', 
+            const response = await axios.post(`${backendUrl}/addBook`, 
                 { book: filteredBook },
                 {
                     headers: {
@@ -186,7 +186,7 @@ export default function Dashboard({ navigation }) {
             setUserBooks(response.data.books);
         } catch (error) {
             console.error(`Error adding book: ${error.response.data.message}`);
-            throw error;  // Re-throw the error for further handling
+            throw error; 
         }
  
    
@@ -207,9 +207,9 @@ export default function Dashboard({ navigation }) {
 
     try {
         const response = await axios({
-            method: 'delete',  // Use DELETE method for removing a book
+            method: 'delete', 
             url: 'http://192.168.0.130:4000/removeFromLibrary',
-            data: { book: filteredBook },  // Include the book details in the request body
+            data: { book: filteredBook }, 
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${userToken}`
@@ -221,7 +221,7 @@ export default function Dashboard({ navigation }) {
     } catch (error) {
         console.error(`Error removing book: ${error.response.data.message}`);
        alert('Server error')
-        throw error;  // Re-throw the error for further handling
+        throw error; 
     }
 };
 
@@ -230,12 +230,12 @@ export default function Dashboard({ navigation }) {
     const loadMoreBooks = async () => {
         try {
             setViewMoreClicked(true);
-            const currentBookKeys = forYouBooks.map(book => book.key); // Extract the keys
+            const currentBookKeys = forYouBooks.map(book => book.key); 
     
-            const response = await axios.get(`http://192.168.0.130:4000/getForYou`, {
+            const response = await axios.get(`${backendUrl}/getForYou`, {
                 params: {
                     offset: offset,
-                    excludeKeys: JSON.stringify(currentBookKeys)  // Send keys as a stringified array
+                    excludeKeys: JSON.stringify(currentBookKeys) 
                 },
                 headers: {
                     'Authorization': `Bearer ${userToken}`
@@ -276,7 +276,7 @@ export default function Dashboard({ navigation }) {
     const fetchForYouBooks = async () => {
         try {
          
-            const response = await axios.get('http://192.168.0.130:4000/getForYou', {
+            const response = await axios.get(`${backendUrl}/getForYou`, {
                 headers: {
                     'Authorization': `Bearer ${userToken}`
                 }
@@ -300,7 +300,7 @@ export default function Dashboard({ navigation }) {
             const response = await axios.get(`https://openlibrary.org/search.json?q=${searchTerm}`);
             const books = response.data.docs.slice(0,10);
             
-            // Fetch ratings for each book
+            
             const ratingsPromises = books.map(book => axios.get(`https://openlibrary.org${book.key}/ratings.json`));
             const ratingsResponses = await Promise.all(ratingsPromises);
             
@@ -379,7 +379,6 @@ export default function Dashboard({ navigation }) {
     const onSelectDailyBook = async (book) => {
         setModalLoading(true);
     
-        // Reset the previous states for new book
         setBookDescription('');
         setAverageRating(null);
         setRatingsCount(0);
@@ -388,34 +387,34 @@ export default function Dashboard({ navigation }) {
     
         if (book.key) {
             try {
-                // Fetching book's main details
+                
                 const bookDetailsResponse = await axios.get(`https://openlibrary.org${book.key}.json`);
                 const description = bookDetailsResponse.data.description;
                 setBookDescription(typeof description === 'string' ? description : "");
     
-                // Fetching the book's editions to get pages and publish date
+                
                 const url = `https://openlibrary.org/works/${book.key.split('/')[2]}/editions.json`;
                 const editionsResponse = await axios.get(url);
     
                 if (editionsResponse.data && editionsResponse.data.entries) {
-                    // Loop through editions to find the first valid number of pages
+                  
                     for (let edition of editionsResponse.data.entries) {
                         if (edition.number_of_pages) {
                             updatedBook.pages = edition.number_of_pages.toString();
                             break;
                         }
                     }
-                    // If no valid number of pages found after the loop, set to "Not Available"
+                    
                     if (!updatedBook.pages) {
                         updatedBook.pages = "Not Available";
                     }
-                    // Get the publish date from the first edition
+                   
                     const firstEdition = editionsResponse.data.entries[0];
                     let matchedDate = (firstEdition.publish_date.match(/\d{4}/) || [])[0];
                     updatedBook.publish_date = matchedDate ? matchedDate.slice(0, 4) : "Not Available";
                 }
     
-                // Fetching ratings
+           
                 const ratingsResponse = await axios.get(`https://openlibrary.org${book.key}/ratings.json`);
                 if (ratingsResponse.data && ratingsResponse.data.summary.average && ratingsResponse.data.summary.count) {
                     setAverageRating(ratingsResponse.data.summary.average);
@@ -427,7 +426,7 @@ export default function Dashboard({ navigation }) {
                 setBookDescription("Failed to fetch book details.");
             }
         }
-        setSelectedBook(updatedBook); // Setting the updfated book object with pages and publish_date
+        setSelectedBook(updatedBook); 
         setModalLoading(false);
     };
     
@@ -438,8 +437,7 @@ export default function Dashboard({ navigation }) {
      const onSelectBook = async (book) => {
     
         setModalLoading(true);
-    
-        // Reset the previous states for new book
+
         setBookDescription('');
         setAverageRating(null);
         setRatingsCount(0);
@@ -448,17 +446,17 @@ export default function Dashboard({ navigation }) {
         
         if (book.key) {
             try {
-                // Fetching book's main details
+               
                 const descriptionResponse = await axios.get(`https://openlibrary.org${book.key}.json`);
                 const description = descriptionResponse.data.description;
                 setBookDescription(typeof description === 'string' ? description : "");
     
-                // Fetching the book's editions to get pages and publish date
+               
                 const url = `https://openlibrary.org/works/${book.key.split('/')[2]}/editions.json`;
                 const editionsResponse = await axios.get(url);
     
                 if (editionsResponse.data && editionsResponse.data.entries) {
-                    // Loop through editions to find the first valid number of pages
+                   
                     for (let edition of editionsResponse.data.entries) {
                         if (edition.number_of_pages) {
                             updatedBook.pages = edition.number_of_pages;
@@ -466,17 +464,16 @@ export default function Dashboard({ navigation }) {
                         }
                     }
     
-                    // If no valid number of pages found after the loop, set to "Not Available"
+                   
                     if (!updatedBook.pages) {
                         updatedBook.pages = "Not Available";
                     }
     
-                    // Get the publish date from the first edition
+                  
                     const firstEdition = editionsResponse.data.entries[0];
                     updatedBook.publish_date = (firstEdition.publish_date.match(/\d{4}/) || [])[0] || "Not Available";
                 }
-    
-                // Fetching ratings
+
                 const ratingsResponse = await axios.get(`https://openlibrary.org${book.key}/ratings.json`);
                 if (ratingsResponse.data && ratingsResponse.data.summary.average && ratingsResponse.data.summary.count) {
                     setAverageRating(ratingsResponse.data.summary.average);
@@ -489,7 +486,7 @@ export default function Dashboard({ navigation }) {
             }
         }
     
-        setSelectedBook(updatedBook); // Setting the updated book object with pages and publish_date
+        setSelectedBook(updatedBook); 
         setModalLoading(false);
     };
     
@@ -501,9 +498,9 @@ export default function Dashboard({ navigation }) {
         setRatingsCount(null);
     };
     const renderBookItem = (book) => {
-        // Extract the first author from the authors' array (or set a default if not available).
+        
         const authorName = book.author_name ? book.author_name[0] : 'Unknown Author';
-        const avgRating = book.average_rating || 0;  // Assuming you have this property on the book object
+        const avgRating = book.average_rating || 0;  
     
         return (
             <TouchableOpacity key={book.key} onPress={() =>  onSelectDailyBook(book)} style={styles.bookItem}>
@@ -604,7 +601,7 @@ export default function Dashboard({ navigation }) {
                                 <Text style={styles.defaultCoverText}>{item.title}</Text>
                             </View>
                         )}
-                        {/* Adding Rating Widget here */}
+                        {/* Rating Widget here */}
                         <View style={styles.ratingWidget}>
                             <FontAwesome name="star" size={20} color="#FFD700" />
                             <Text style={styles.ratingText}>{parseFloat(item.rating).toFixed(1)}</Text>
@@ -725,7 +722,7 @@ const createNavItem = (onPress, iconName, label) => {
         case "library-books":
             IconComponent = MaterialIcons;
             break;
-        case "book": // Add this case
+        case "book": 
             IconComponent = FontAwesome;
             break;
         default:
@@ -750,7 +747,7 @@ const styles = StyleSheet.create({
         borderRadius: 5, 
     },
     searchBox: {
-        flex: 1,  // Make sure it takes up all available space
+        flex: 1, 
         padding: 10,
         width:'100%',
      
@@ -762,7 +759,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
         position: 'absolute',
         right: 5,
-        height: '100%',  // Make sure it stretches vertically
+        height: '100%',  
     },
     clearButtonText: {
         fontSize: 16,
@@ -859,12 +856,12 @@ const styles = StyleSheet.create({
     },
     ratingContainer: {
         flexDirection: 'row',
-        alignItems: 'center', // to ensure the stars and text are vertically aligned
+        alignItems: 'center',
         marginBottom: 10,
     },
     starContainer: {
         flexDirection: 'row',
-        marginRight: 8, // space between stars and text
+        marginRight: 8,
     },
     modalRating: {
         fontSize: 14,
@@ -891,13 +888,13 @@ const styles = StyleSheet.create({
     },
     defaultCoverBOD: {
         width: scaleWidth(140) * 0.9,
-        height: scaleHeight(215) * 0.9,   // Sample width and height
-        borderRadius: 5,  // Rounded corners for the book cover
+        height: scaleHeight(215) * 0.9,   
+        borderRadius: 5, 
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        elevation: 5,  // For Android shadow
+        elevation: 5, 
 
     },
     defaultCoverText: {
@@ -933,8 +930,8 @@ const styles = StyleSheet.create({
         elevation: 5, 
     },
     dailyBookActivityWrapper: {
-        width: '100%',  // Match the width of the dailyBookCover
-        height: scaleHeight(215) * 0.9,  // Match the height of the dailyBookCover
+        width: '100%', 
+        height: scaleHeight(215) * 0.9, 
         justifyContent: 'center',
         alignItems: 'center',
         display: 'flex',
@@ -979,18 +976,18 @@ const styles = StyleSheet.create({
     },
  
     ratingWidget: {
-        position: 'absolute',  // Absolutely position the widget
-        top: 5,                // Positioning from the top
-        right: 5,              // Positioning from the right
-        flexDirection: 'row',  // Display star and rating in a row
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',  // Semi-transparent background
-        borderRadius: 15,      // Make it ovular
-        paddingVertical: 5,    // Vertical padding
-        paddingHorizontal: 8   // Horizontal padding
+        position: 'absolute',  
+        top: 5,                
+        right: 5,              
+        flexDirection: 'row',  
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',  
+        borderRadius: 15,     
+        paddingVertical: 5,    
+        paddingHorizontal: 8   
     },
     ratingText: {
         color: '#FFF',
-        marginLeft: 5          // Space between star and rating
+        marginLeft: 5         
     },
     activityIndicatorSmall: {
         flex: 1,
@@ -1005,8 +1002,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingVertical: 10,
         paddingHorizontal: 20,
-        borderRadius: 25,  // This will give the ovular effect
-        backgroundColor: '#f1f1f1',  // Change this to your desired background color
+        borderRadius: 25,  
+        backgroundColor: '#f1f1f1',  
         marginVertical: 10,
     },
     ovularText: {
@@ -1014,31 +1011,31 @@ const styles = StyleSheet.create({
         
     },
     addToLibraryButton: {
-        flexDirection: 'row',    // To display icon and text side by side
-        position: 'absolute',    // Positioning it at the bottom of the modal
-        bottom: 20,              // Adjust this value for the desired position from the bottom
+        flexDirection: 'row',    
+        position: 'absolute',   
+        bottom: 20,              
         left: 5,
         right: 0,
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
-        backgroundColor: '#007BFF', // Color for the button. Adjust as needed.
+        backgroundColor: '#007BFF', 
         borderRadius: 5,
-        elevation: 5,             // Gives a shadow effect in Android
-        shadowOffset: { width: 0, height: 2 },   // Shadow for iOS
+        elevation: 5,            
+        shadowOffset: { width: 0, height: 2 },   
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
     },
     buttonText: {
         color: 'white',
-        marginLeft: 10            // Spacing between icon and text
+        marginLeft: 10           
     },
     gradientContainerAddToLibrary: {
         position: 'absolute',
-        bottom: 20,              // Adjust this to the desired position from the bottom
-        left: 20,                // Margin from the side of the screen
-        right: 20,               // Margin from the side of the screen
-        borderRadius: 5,         // Makes the gradient have rounded corners
+        bottom: 20,             
+        left: 20,               
+        right: 20,              
+        borderRadius: 5,       
     },
     addToLibraryButton: {
         flexDirection: 'row',
@@ -1057,7 +1054,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         alignItems: 'center',
         justifyContent: 'center',
-        height: 200, // This should roughly match the height of your book covers, adjust accordingly
+        height: 200,
     },
     viewMoreText: {
         color: 'black',

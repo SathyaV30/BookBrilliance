@@ -7,16 +7,18 @@ import { globalStyles } from './GlobalStyles';
 import Svg, { Circle, Rect } from 'react-native-svg';
 import { AuthContext } from '../../AuthContext';
 import axios from 'axios';
+import { backendUrl } from '../../config';
 
 export default function Login({ navigation }) {
   const [emailOrUsername, setEmailOrUserName] = useState('');
   const [password, setPassword] = useState('');
   const {login} = useContext(AuthContext)
+  console.log(backendUrl)
  
 
   const handleLogin = async () => {
       try {
-          const response = await axios.post('http://192.168.0.130:4000/login', {
+          const response = await axios.post(`${backendUrl}/login`, {
               emailOrUsername,
               password
           });
@@ -24,11 +26,10 @@ export default function Login({ navigation }) {
           const { token } = response.data;
   
           if (token) {
-              // Here, you'd typically store this token securely (e.g., AsyncStorage, redux store, context API)
+          
               alert('Login successful!');
   
-              // Navigate to dashboard or next screen
-              // For example: navigation.navigate('Dashboard');
+    
               login(token);
               navigation.navigate('Dashboard');
           } else {
