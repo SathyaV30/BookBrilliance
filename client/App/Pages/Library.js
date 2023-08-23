@@ -34,7 +34,7 @@ export default function Library() {
 
   
     const getHighQualityImageURL = (url) => {
-        return url.replace('-S.jpg', '-L.jpg'); // Replace with '-L.jpg' for even larger image
+        return url.replace('-S.jpg', '-L.jpg');
     }
 
     const handleBookPress = (item) => {
@@ -76,7 +76,7 @@ export default function Library() {
             setBooks(response.data.books);  
         } catch (error) {
             console.error(`Error adding book: ${error.response.data.message}`);
-            throw error;  // Re-throw the error for further handling
+            throw error; 
         }
 
 
@@ -99,9 +99,9 @@ export default function Library() {
 
     try {
         const response = await axios({
-            method: 'delete',  // Use DELETE method for removing a book
+            method: 'delete', 
             url: 'http://192.168.0.130:4000/removeFromLibrary',
-            data: { book: filteredBook },  // Include the book details in the request body
+            data: { book: filteredBook }, 
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${userToken}`
@@ -113,13 +113,13 @@ export default function Library() {
     } catch (error) {
         console.error(`Error removing book: ${error.response.data.message}`);
        alert('Server error')
-        throw error;  // Re-throw the error for further handling
+        throw error; 
     }
 };
 
 
     useEffect(() => {
-        // Filter books based on search query
+      
 
         const filtered = books.filter((book) => {
             return book.title.toLowerCase().includes(searchQuery.toLowerCase());
@@ -160,11 +160,11 @@ export default function Library() {
                     )}
                 </TouchableOpacity>
             </View>
-        ) : null  // Return null (or you can return <></> an empty fragment) if item doesn't exist
+        ) : null  
     )}
     
-    keyExtractor={(item) => item._id} // Assuming each book has a unique _id
-    numColumns={3} // This will display 3 books in one row
+    keyExtractor={(item) => item._id} 
+    numColumns={3} 
 />
         {selectedBook && 
             <BookModal 
@@ -200,16 +200,16 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     bookContainer: {
-        flex: 1/3, // 1 divided by the number of columns
+        flex: 1/3, 
         marginBottom: 10,
-        marginHorizontal: 5, // optional: you can adjust as needed
+        marginHorizontal: 5, 
      
     },
     image: {
         width: '100%',
         minHeight: 250,
         maxHeight:250,
-        resizeMode: 'contain', // To make sure the image covers the whole area
+        resizeMode: 'contain',
     },
     noCover: {
         width: '100%',

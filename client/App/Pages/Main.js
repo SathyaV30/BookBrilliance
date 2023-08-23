@@ -30,7 +30,7 @@ export default function Main({ navigation }) {
     try {
       const result = await promptAsync();
       if (result.type === 'success') {
-        // Handle successful authentication
+        
       }
     } catch (error) {
       console.error("Google login error:", error);
@@ -157,7 +157,8 @@ const styles = StyleSheet.create({
 
   buttonText: {
     color: '#FFF9E9',
-    fontSize: 20,  
+    fontSize: 20, 
+  },
   separator: {
     flexDirection: 'row',
     alignItems: 'center',
