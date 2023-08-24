@@ -1,6 +1,6 @@
 import React from 'react';
 import { ImageBackground, Text } from 'react-native';
-import libraryPic from './Images/library.jpg'; // Ensure you have imported the image
+import libraryPic from './Images/library.jpg';
 
 export default function CustomHeader({ title }) {
   return (

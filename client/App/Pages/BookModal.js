@@ -2,6 +2,7 @@ import { Image, Modal, View, ScrollView, TouchableOpacity, Text, StyleSheet, Act
 import { FontAwesome, Entypo } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Linking } from 'react-native';
+import { backendUrl } from '../../config';
 
 import React, { useState, useEffect, useContext } from 'react';
 

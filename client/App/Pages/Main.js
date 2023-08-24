@@ -84,7 +84,7 @@ export default function Main({ navigation }) {
               <Text style={styles.buttonText}>Register</Text>
             </LinearGradient>
           </TouchableOpacity>
-{/* 
+{/* TODO
           <View style={styles.separator}>
             <View style={styles.line} />
             <Text style={styles.separatorText}>Or</Text>

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "bookbrilliance",
-    "slug": "bookbrilliance",
+    "name": "Book Brilliance",
+    "slug": "book-brilliance",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,18 +16,30 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.bookbrilliance"
+      "bundleIdentifier": "com.anonymous.bookbrilliance",
+      "runtimeVersion": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.bookbrilliance"
+      "package": "com.anonymous.bookbrilliance",
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "scheme":"bookbrilliance"
+    "scheme": "bookbrilliance",
+    "extra": {
+      "eas": {
+        "projectId": "ab24e9dc-a74d-43bc-8a74-1190f1ecfa28"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/ab24e9dc-a74d-43bc-8a74-1190f1ecfa28"
+    }
   }
 }
