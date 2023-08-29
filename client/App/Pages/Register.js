@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -14,6 +14,7 @@ export default function Register({ navigation }) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const {login} = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
 
 
   const handleRegister = async () => {
@@ -21,7 +22,7 @@ export default function Register({ navigation }) {
       alert('Passwords do not match!');
       return;
     }
-
+    setLoading(true);
     try {
       const response = await axios.post(`${backendUrl}/register`, {
         username,
@@ -35,7 +36,7 @@ export default function Register({ navigation }) {
        
         const { token } = data;
         login(token);
-
+        setLoading(false);
        
         navigation.navigate('Dashboard');
 
@@ -48,6 +49,7 @@ export default function Register({ navigation }) {
       console.error('Error:', error);
       alert('There was an error registering. Please try again later.');
     }
+    setLoading(false);
 };
 
   return (
@@ -121,6 +123,8 @@ export default function Register({ navigation }) {
           <Text style={styles.buttonText}>Register</Text>
         </LinearGradient>
       </TouchableOpacity>
+      
+      
 
       <View style={styles.footer}>
         <Text>Already have an account? </Text>
@@ -128,7 +132,13 @@ export default function Register({ navigation }) {
           <Text style={styles.loginText}>Log in</Text>
         </TouchableOpacity>
       </View>
+
+      <View style ={{margin:5}}>
+        {loading && <ActivityIndicator/>}
+      </View>
+    
     </View>
+    
   );
 }
 

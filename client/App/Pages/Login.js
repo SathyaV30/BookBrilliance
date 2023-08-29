@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -13,10 +13,11 @@ export default function Login({ navigation }) {
   const [emailOrUsername, setEmailOrUserName] = useState('');
   const [password, setPassword] = useState('');
   const {login} = useContext(AuthContext)
-  console.log(backendUrl)
+  const [loading, setLoading] = useState(false);
  
 
   const handleLogin = async () => {
+    setLoading(true);
       try {
           const response = await axios.post(`${backendUrl}/login`, {
               emailOrUsername,
@@ -26,19 +27,18 @@ export default function Login({ navigation }) {
           const { token } = response.data;
   
           if (token) {
-          
-              alert('Login successful!');
-  
-    
+            setLoading(false);
               login(token);
               navigation.navigate('Dashboard');
           } else {
               alert('Login failed! Please try again.');
           }
       } catch (error) {
+          setLoading(false);
           console.error('Error:', error);
           alert('There was an error logging in. Please check your credentials and try again.');
       }
+
   };
   
   return (
@@ -97,6 +97,10 @@ export default function Login({ navigation }) {
         <TouchableOpacity onPress={() => navigation.navigate('Register')}>
           <Text style={styles.registerText}>Register</Text>
         </TouchableOpacity>
+      </View>
+
+      <View style ={{margin:5}}>
+        {loading && <ActivityIndicator/>}
       </View>
     </View>
   );
