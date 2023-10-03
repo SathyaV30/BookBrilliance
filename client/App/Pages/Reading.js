@@ -43,9 +43,6 @@ export default function Reading() {
     const [isImageLoaded, setIsImageLoaded] = useState(false);
     const [isModalImageLoaded, setIsModalImageLoaded] = useState(false);
 
-    useEffect(() => {
-        Image.prefetch(libraryPic);
-    }, []);
 
 
     

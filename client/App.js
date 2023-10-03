@@ -80,7 +80,7 @@ function AppNavigation() {
 
 export default function App() {
 
-Image.prefetch(libraryPic);
+
     return (
         <><AuthProvider>
             <AppNavigation />
@@ -90,12 +90,3 @@ Image.prefetch(libraryPic);
         </>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});
